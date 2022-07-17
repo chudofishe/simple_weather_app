@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="temperature">24°C</string>
+    <string name="condition_text" />
+    <string name="feels_like">Feels like: 1$s °C</string>
+</resources>
