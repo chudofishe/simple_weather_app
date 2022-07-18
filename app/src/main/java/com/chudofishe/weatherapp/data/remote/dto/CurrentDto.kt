@@ -26,7 +26,7 @@ data class CurrentDto(
 fun CurrentDto.toCurrentWeather(): CurrentWeather {
     return CurrentWeather(
         cloud = cloud,
-        conditionIcon = condition.icon,
+        conditionIcon = "https://" + condition.icon.removePrefix("//"),
         conditionText = condition.text,
         feelsLike = feelslikeC,
         humidity = humidity,

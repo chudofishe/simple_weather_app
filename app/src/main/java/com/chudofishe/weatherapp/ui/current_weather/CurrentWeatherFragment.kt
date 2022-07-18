@@ -10,12 +10,17 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.bumptech.glide.Glide
 import com.chudofishe.weatherapp.R
 import com.chudofishe.weatherapp.common.Result
+import com.chudofishe.weatherapp.common.toIntString
+import com.chudofishe.weatherapp.common.toPercent
 import com.chudofishe.weatherapp.databinding.FragmentCurrentWeatherBinding
 import com.chudofishe.weatherapp.ui.main.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class CurrentWeatherFragment : Fragment() {
 
     private val viewModel: MainViewModel by viewModels()
@@ -46,11 +51,18 @@ class CurrentWeatherFragment : Fragment() {
                         is Result.Success -> {
                             result.data?.let { cw ->
                                 binding.apply {
-                                    temp.text = cw.temp.toString()
-                                    text.text = cw.conditionText
-                                    feelsLike.text = getString(R.string.feels_like, cw.feelsLike.toString())
+                                    temp.text = getString(R.string.temperature, cw.temp)
+                                    conditionText.text = cw.conditionText
+                                    feelsLike.text = getString(R.string.feels_like, cw.feelsLike.toInt())
+                                    uv.text = cw.uv.toString()
+                                    windKph.text = cw.windKph.toString()
+                                    humidity.text = cw.humidity.toString()
+                                    cloud.text = cw.cloud.toString()
+                                    activity?.let { Glide.with(it).load(cw.conditionIcon).into(icon) }
                                 }
                             }
+                            binding.viewGroup.visibility = View.VISIBLE
+                            binding.progressBar.visibility = View.GONE
                         }
                         else -> {
                             //show error message
@@ -60,7 +72,6 @@ class CurrentWeatherFragment : Fragment() {
                                 result.message,
                                 Toast.LENGTH_SHORT
                             ).show()
-
                         }
                     }
                 }
