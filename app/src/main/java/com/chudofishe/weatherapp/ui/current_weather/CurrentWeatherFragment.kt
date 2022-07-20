@@ -13,17 +13,14 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.chudofishe.weatherapp.R
 import com.chudofishe.weatherapp.common.Result
-import com.chudofishe.weatherapp.common.toIntString
-import com.chudofishe.weatherapp.common.toPercent
 import com.chudofishe.weatherapp.databinding.FragmentCurrentWeatherBinding
-import com.chudofishe.weatherapp.ui.main.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CurrentWeatherFragment : Fragment() {
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: CurrentWeatherViewModel by viewModels()
 
     private var _binding: FragmentCurrentWeatherBinding? = null
     private val binding: FragmentCurrentWeatherBinding

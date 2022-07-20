@@ -2,46 +2,36 @@ package com.chudofishe.weatherapp.ui.forecast_list
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.chudofishe.weatherapp.databinding.FragmentForecastListBinding
-import com.chudofishe.weatherapp.ui.forecast_list.placeholder.PlaceholderContent.PlaceholderItem
+import com.bumptech.glide.Glide
+import com.chudofishe.weatherapp.R
+import com.chudofishe.weatherapp.databinding.ForecastItemBinding
+import com.chudofishe.weatherapp.domain.model.Forecast
+import java.time.LocalDate
 
-/**
- * [RecyclerView.Adapter] that can display a [PlaceholderItem].
- * TODO: Replace the implementation with code for your data type.
- */
-class ForecastListAdapter(
-    private val values: List<PlaceholderItem>
-) : RecyclerView.Adapter<ForecastListAdapter.ViewHolder>() {
+class ForecastListAdapter(private val values: List<Forecast>) : RecyclerView.Adapter<ForecastListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-
-        return ViewHolder(
-            FragmentForecastListBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
-        )
-
+        val inflater: LayoutInflater = LayoutInflater.from(parent.context)
+        val binding = ForecastItemBinding.inflate(inflater, parent, false)
+        return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
-        holder.idView.text = item.id
-        holder.contentView.text = item.content
+        holder.bind(item)
     }
 
     override fun getItemCount(): Int = values.size
 
-    inner class ViewHolder(binding: FragmentForecastListBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        val idView: TextView = binding.itemNumber
-        val contentView: TextView = binding.content
+    inner class ViewHolder(private val binding: ForecastItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        override fun toString(): String {
-            return super.toString() + " '" + contentView.text + "'"
+        fun bind(item: Forecast) {
+            binding.apply {
+                weekDay.text = LocalDate.ofEpochDay(item.dateEpoch.toLong()).dayOfWeek.toString()
+                tempAndCondition.text = itemView.resources.getString(R.string.temp_and_condition, item.avgTemp.toInt(), item.text)
+                Glide.with(itemView).load(item.icon).into(conditionIcon)
+            }
         }
     }
 

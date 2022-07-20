@@ -19,7 +19,7 @@ fun ForecastdayDto.toForecast(): Forecast {
         dateEpoch = dateEpoch,
         avgHumidity = day.avghumidity,
         avgTemp = day.avgtempC,
-        icon = day.condition.icon,
+        icon = "https://" + day.condition.icon.removePrefix("//"),
         text = day.condition.text,
         details = ForecastDetails(
             sunrise = astro.sunrise,

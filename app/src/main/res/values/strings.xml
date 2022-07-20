@@ -3,4 +3,5 @@
     <string name="temperature">%1$d°C</string>
     <string name="condition_text">Sunny</string>
     <string name="feels_like">Feels like: %1$d °C</string>
+    <string name="temp_and_condition">%1$d°C %2$s</string>
 </resources>
