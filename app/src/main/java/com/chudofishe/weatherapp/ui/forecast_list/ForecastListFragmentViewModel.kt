@@ -32,7 +32,8 @@ class ForecastListFragmentViewModel @Inject constructor(private val weatherObjec
                         _forecastListState.value = if (response.data == null) {
                             Result.Error(response.message ?: "An unxpected error occurred")
                         } else {
-                            Result.Success(response.data.forecast.forecastday.map { it.toForecast() })
+                            Result.Success(response.data.forecast.forecastday.map { it.toForecast() }
+                                .sortedByDescending { it.dateEpoch })
                         }
                     }
                     else -> {

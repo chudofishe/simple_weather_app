@@ -3,7 +3,10 @@ package com.chudofishe.weatherapp.data.remote.dto
 
 import com.chudofishe.weatherapp.domain.model.Forecast
 import com.chudofishe.weatherapp.domain.model.ForecastDetails
+import com.chudofishe.weatherapp.domain.model.HourForecast
 import com.google.gson.annotations.SerializedName
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 data class ForecastdayDto(
     val astro: AstroDto,
@@ -33,7 +36,12 @@ fun ForecastdayDto.toForecast(): Forecast {
             maxTemp = day.maxtempC,
             maxWind = day.maxwindKph,
             minTemp = day.mintempC,
-            uv = day.uv
+            uv = day.uv,
+            hourForecastList = hour.map { dto -> HourForecast(
+                time = dto.time.takeLast(4),
+                temp = dto.tempC.toInt(),
+                icon = "https://" + dto.condition.icon.removePrefix("//")
+            )}
         )
     )
 }

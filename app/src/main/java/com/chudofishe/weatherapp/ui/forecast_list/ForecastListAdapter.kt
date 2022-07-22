@@ -7,9 +7,12 @@ import com.bumptech.glide.Glide
 import com.chudofishe.weatherapp.R
 import com.chudofishe.weatherapp.databinding.ForecastItemBinding
 import com.chudofishe.weatherapp.domain.model.Forecast
+import com.chudofishe.weatherapp.domain.model.ForecastDetails
 import java.time.LocalDate
 
 class ForecastListAdapter(private val values: List<Forecast>) : RecyclerView.Adapter<ForecastListAdapter.ViewHolder>() {
+
+    var clickListener: (item: ForecastDetails) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)
@@ -31,6 +34,10 @@ class ForecastListAdapter(private val values: List<Forecast>) : RecyclerView.Ada
                 weekDay.text = LocalDate.ofEpochDay(item.dateEpoch.toLong()).dayOfWeek.toString()
                 tempAndCondition.text = itemView.resources.getString(R.string.temp_and_condition, item.avgTemp.toInt(), item.text)
                 Glide.with(itemView).load(item.icon).into(conditionIcon)
+            }
+
+            itemView.setOnClickListener {
+                clickListener(item.details)
             }
         }
     }
