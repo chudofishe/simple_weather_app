@@ -19,6 +19,6 @@ class ForecastDetailsViewModel(private val savedStateHandle: SavedStateHandle) :
     }
 
     companion object {
-        const val KEY_DETAILS = "details"
+        const val KEY_DETAILS = "forecastDetails"
     }
 }

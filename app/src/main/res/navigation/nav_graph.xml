@@ -9,24 +9,19 @@
         android:id="@+id/mainFragment"
         android:name="com.chudofishe.weatherapp.ui.main.MainFragment"
         android:label="MainFragment"
-        tools:layout="@layout/fragment_main"/>
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_mainFragment_to_currentWeatherFragment"
+            app:destination="@id/forecastDetailsFragment" />
+    </fragment>
     <fragment
-        android:id="@+id/currentWeatherFragment"
-        android:name="com.chudofishe.weatherapp.ui.current_weather.CurrentWeatherFragment"
+        android:id="@+id/forecastDetailsFragment"
+        android:name="com.chudofishe.weatherapp.ui.forecast_details.ForecastDetailsFragment"
         android:label="fragment_forecast_details"
         tools:layout="@layout/fragment_forecast_details" >
         <argument
             android:name="forecastDetails"
             app:argType="com.chudofishe.weatherapp.domain.model.ForecastDetails" />
-    </fragment>
-    <fragment
-        android:id="@+id/forecastListFragment"
-        android:name="com.chudofishe.weatherapp.ui.forecast_list.ForecastListFragment"
-        android:label="ForecastListFragment"
-        tools:layout="@layout/fragment_forecast_list">
-        <action
-            android:id="@+id/action_forecastListFragment_to_currentWeatherFragment"
-            app:destination="@id/currentWeatherFragment" />
     </fragment>
 
 </navigation>

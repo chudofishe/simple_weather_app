@@ -1,6 +1,7 @@
 package com.chudofishe.weatherapp.data.remote.dto
 
 
+import com.chudofishe.weatherapp.common.Util
 import com.chudofishe.weatherapp.domain.model.Forecast
 import com.chudofishe.weatherapp.domain.model.ForecastDetails
 import com.chudofishe.weatherapp.domain.model.HourForecast
@@ -18,11 +19,12 @@ data class ForecastdayDto(
 )
 
 fun ForecastdayDto.toForecast(): Forecast {
+    val iconUrl = Util.getIconUrl(day.condition.icon)
     return Forecast(
         dateEpoch = dateEpoch,
         avgHumidity = day.avghumidity,
         avgTemp = day.avgtempC,
-        icon = "https://" + day.condition.icon.removePrefix("//"),
+        icon = iconUrl,
         text = day.condition.text,
         details = ForecastDetails(
             sunrise = astro.sunrise,
@@ -30,7 +32,7 @@ fun ForecastdayDto.toForecast(): Forecast {
             dateEpoch = dateEpoch,
             avgHumidity = day.avghumidity,
             avgTemp = day.avgtempC,
-            icon = day.condition.icon,
+            icon = iconUrl,
             text = day.condition.text,
             dailyChanceOfRain = day.dailyChanceOfRain,
             maxTemp = day.maxtempC,
@@ -38,9 +40,9 @@ fun ForecastdayDto.toForecast(): Forecast {
             minTemp = day.mintempC,
             uv = day.uv,
             hourForecastList = hour.map { dto -> HourForecast(
-                time = dto.time.takeLast(4),
+                time = dto.time.takeLastWhile { it != ' ' },
                 temp = dto.tempC.toInt(),
-                icon = "https://" + dto.condition.icon.removePrefix("//")
+                icon = iconUrl
             )}
         )
     )

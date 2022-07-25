@@ -1,6 +1,7 @@
 package com.chudofishe.weatherapp.ui.forecast_list
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -10,9 +11,8 @@ import com.chudofishe.weatherapp.domain.model.Forecast
 import com.chudofishe.weatherapp.domain.model.ForecastDetails
 import java.time.LocalDate
 
-class ForecastListAdapter(private val values: List<Forecast>) : RecyclerView.Adapter<ForecastListAdapter.ViewHolder>() {
-
-    var clickListener: (item: ForecastDetails) -> Unit = {}
+class ForecastListAdapter(private val values: List<Forecast>,
+    private val clickListener: (item: ForecastDetails) -> Unit) : RecyclerView.Adapter<ForecastListAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater: LayoutInflater = LayoutInflater.from(parent.context)

@@ -1,5 +1,7 @@
 package com.chudofishe.weatherapp.domain.model
 
+import java.time.DayOfWeek
+
 data class Forecast (
     val dateEpoch: Int,
     val avgHumidity: Double,

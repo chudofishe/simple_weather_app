@@ -1,6 +1,7 @@
 package com.chudofishe.weatherapp.data.remote.dto
 
 
+import com.chudofishe.weatherapp.common.Util
 import com.chudofishe.weatherapp.domain.model.CurrentWeather
 import com.google.gson.annotations.SerializedName
 
@@ -24,9 +25,10 @@ data class CurrentDto(
 )
 
 fun CurrentDto.toCurrentWeather(): CurrentWeather {
+    val iconUrl = Util.getIconUrl(condition.icon)
     return CurrentWeather(
         cloud = cloud,
-        conditionIcon = "https://" + condition.icon.removePrefix("//"),
+        conditionIcon = iconUrl,
         conditionText = condition.text,
         feelsLike = feelslikeC,
         humidity = humidity,

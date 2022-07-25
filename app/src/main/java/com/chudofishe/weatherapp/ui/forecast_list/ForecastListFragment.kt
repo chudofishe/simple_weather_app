@@ -10,12 +10,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chudofishe.weatherapp.common.Result
 import com.chudofishe.weatherapp.databinding.FragmentForecastListBinding
 import com.chudofishe.weatherapp.domain.model.Forecast
+import com.chudofishe.weatherapp.domain.model.ForecastDetails
+import com.chudofishe.weatherapp.ui.main.MainFragmentDirections
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -47,17 +50,11 @@ class ForecastListFragment : Fragment() {
                         }
                         is Result.Success -> {
                             binding.progressBar.visibility = View.GONE
-                            binding.list.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-                            binding.list.adapter = ForecastListAdapter(result.data ?: emptyList())
+                            setupList(result.data ?: emptyList())
                         }
                         else -> {
-                            //show error message
                             binding.progressBar.visibility = View.GONE
-                            Toast.makeText(
-                                requireContext(),
-                                result.message,
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            showErrorMessage(result.message ?: "Unknown error occurred")
                         }
                     }
                 }
@@ -66,15 +63,24 @@ class ForecastListFragment : Fragment() {
     }
 
     private fun setupList(data: List<Forecast>) {
-        val adapter = ForecastListAdapter(data)
-        adapter.clickListener = {
-            val action = ForecastListFragmentDirections.actionForecastListFragmentToCurrentWeatherFragment(it)
-            this.findNavController().navigate(action)
-        }
+        val adapter = ForecastListAdapter(data, ::navigateToForecastDetails)
         binding.list.apply {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             this.adapter = adapter
         }
+    }
+
+    private fun showErrorMessage(message: String) {
+        Toast.makeText(
+            requireContext(),
+            message,
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun navigateToForecastDetails(item: ForecastDetails) {
+        val action = MainFragmentDirections.actionMainFragmentToCurrentWeatherFragment(item)
+        this.findNavController().navigate(action)
     }
 
     override fun onDestroyView() {
