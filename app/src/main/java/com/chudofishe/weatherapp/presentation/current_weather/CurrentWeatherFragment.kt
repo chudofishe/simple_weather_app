@@ -1,40 +1,37 @@
-package com.chudofishe.weatherapp.ui.forecast_list
+package com.chudofishe.weatherapp.presentation.current_weather
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.chudofishe.weatherapp.R
 import com.chudofishe.weatherapp.common.Result
-import com.chudofishe.weatherapp.databinding.FragmentForecastListBinding
-import com.chudofishe.weatherapp.domain.model.Forecast
-import com.chudofishe.weatherapp.domain.model.ForecastDetails
-import com.chudofishe.weatherapp.ui.main.MainFragmentDirections
+import com.chudofishe.weatherapp.databinding.FragmentCurrentWeatherBinding
+import com.chudofishe.weatherapp.domain.model.CurrentWeather
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ForecastListFragment : Fragment() {
+class CurrentWeatherFragment : Fragment() {
 
-    private val viewModel: ForecastListFragmentViewModel by viewModels()
+    private val viewModel: CurrentWeatherViewModel by viewModels()
 
-    private var _binding: FragmentForecastListBinding? = null
-    private val binding: FragmentForecastListBinding
+    private var _binding: FragmentCurrentWeatherBinding? = null
+    private val binding: FragmentCurrentWeatherBinding
         get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentForecastListBinding.inflate(inflater, container, false)
+        _binding = FragmentCurrentWeatherBinding.inflate(inflater, container, false)
 
         return binding.root
     }
@@ -42,16 +39,19 @@ class ForecastListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.forecastListState.collect { result ->
+                viewModel.currentWeatherState.collect { result ->
                     when (result) {
                         is Result.Loading -> {
+                            binding.viewGroup.visibility = View.GONE
                             binding.progressBar.visibility = View.VISIBLE
                         }
                         is Result.Success -> {
+                            result.data?.let { assignData(it) }
+                            binding.viewGroup.visibility = View.VISIBLE
                             binding.progressBar.visibility = View.GONE
-                            setupList(result.data ?: emptyList())
                         }
                         else -> {
+                            //show error message
                             binding.progressBar.visibility = View.GONE
                             showErrorMessage(result.message ?: "Unknown error occurred")
                         }
@@ -61,11 +61,21 @@ class ForecastListFragment : Fragment() {
         }
     }
 
-    private fun setupList(data: List<Forecast>) {
-        val adapter = ForecastListAdapter(data, ::navigateToForecastDetails)
-        binding.list.apply {
-            layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            this.adapter = adapter
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun assignData(cw: CurrentWeather) {
+        binding.apply {
+            temp.text = getString(R.string.temperature, cw.temp)
+            conditionText.text = cw.conditionText
+            feelsLike.text = getString(R.string.feels_like, cw.feelsLike.toInt())
+            uv.text = cw.uv.toString()
+            windKph.text = cw.windKph.toString()
+            humidity.text = cw.humidity.toString()
+            cloud.text = cw.cloud.toString()
+            activity?.let { Glide.with(it).load(cw.conditionIcon).into(icon) }
         }
     }
 
@@ -77,13 +87,4 @@ class ForecastListFragment : Fragment() {
         ).show()
     }
 
-    private fun navigateToForecastDetails(item: ForecastDetails) {
-        val action = MainFragmentDirections.actionMainFragmentToCurrentWeatherFragment(item)
-        this.findNavController().navigate(action)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
 }

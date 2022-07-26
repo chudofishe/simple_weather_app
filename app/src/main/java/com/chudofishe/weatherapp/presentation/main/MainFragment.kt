@@ -1,4 +1,4 @@
-package com.chudofishe.weatherapp.ui.main
+package com.chudofishe.weatherapp.presentation.main
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.chudofishe.weatherapp.databinding.FragmentMainBinding
-import com.chudofishe.weatherapp.ui.current_weather.CurrentWeatherFragment
-import com.chudofishe.weatherapp.ui.forecast_list.ForecastListFragment
+import com.chudofishe.weatherapp.presentation.current_weather.CurrentWeatherFragment
+import com.chudofishe.weatherapp.presentation.forecast_list.ForecastListFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 

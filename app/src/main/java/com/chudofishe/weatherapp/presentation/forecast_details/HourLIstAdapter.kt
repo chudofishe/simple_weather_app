@@ -1,4 +1,4 @@
-package com.chudofishe.weatherapp.ui.forecast_details
+package com.chudofishe.weatherapp.presentation.forecast_details
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

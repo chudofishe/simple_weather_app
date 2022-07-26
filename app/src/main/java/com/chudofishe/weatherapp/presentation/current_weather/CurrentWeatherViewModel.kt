@@ -1,4 +1,4 @@
-package com.chudofishe.weatherapp.ui.current_weather
+package com.chudofishe.weatherapp.presentation.current_weather
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

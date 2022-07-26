@@ -1,4 +1,4 @@
-package com.chudofishe.weatherapp.ui.forecast_list
+package com.chudofishe.weatherapp.presentation.forecast_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
