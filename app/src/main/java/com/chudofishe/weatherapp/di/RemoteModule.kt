@@ -2,6 +2,8 @@ package com.chudofishe.weatherapp.di
 
 import com.chudofishe.weatherapp.BuildConfig
 import com.chudofishe.weatherapp.data.remote.WeatherApiService
+import com.chudofishe.weatherapp.data.repository.WeatherRepositoryImpl
+import com.chudofishe.weatherapp.domain.repository.WeatherRepository
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -52,4 +54,9 @@ object RemoteModule {
     @Singleton
     fun provideWeatherService(retrofit: Retrofit): WeatherApiService =
         retrofit.create(WeatherApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideWeatherRepository(api: WeatherApiService): WeatherRepository =
+        WeatherRepositoryImpl(api)
 }

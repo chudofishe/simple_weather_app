@@ -42,7 +42,7 @@ fun ForecastdayDto.toForecast(): Forecast {
             hourForecastList = hour.map { dto -> HourForecast(
                 time = dto.time.takeLastWhile { it != ' ' },
                 temp = dto.tempC.toInt(),
-                icon = iconUrl
+                icon = Util.getIconUrl(dto.condition.icon)
             )}
         )
     )
