@@ -2,6 +2,7 @@ package com.chudofishe.weatherapp.presentation.main
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -13,8 +14,8 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -25,47 +26,46 @@ import com.chudofishe.weatherapp.databinding.FragmentMainBinding
 import com.chudofishe.weatherapp.presentation.current_weather.CurrentWeatherFragment
 import com.chudofishe.weatherapp.presentation.forecast_list.ForecastListFragment
 import com.chudofishe.weatherapp.presentation.util.GetLocationResultListener
-import com.chudofishe.weatherapp.presentation.util.PermissionException
 import com.google.android.gms.location.*
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainFragment : Fragment() {
 
-    private lateinit var _binding: FragmentMainBinding
+    private var _binding: FragmentMainBinding? = null
     private val binding
-        get() = _binding
+        get() = _binding!!
 
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
+    private lateinit var tabLayoutMediator: TabLayoutMediator
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private enum class Cause {
-        PERMISSION, LOCATION
+        PERMISSION, LOCATION, NEVER_ASK
     }
 
     private val locationPermissionRequest =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            try {
-                if (isGranted) {
-                    getCurrentLocation(getLocationResultListener)
-                } else {
-                    throw PermissionException("Please provide location access")
-                }
-            } catch (ex: PermissionException) {
-                displayError(Cause.PERMISSION)
+            if (isGranted) {
+                getCurrentLocation(getLocationResultListener)
+            } else {
+                val neverAskAgain = !ActivityCompat.shouldShowRequestPermissionRationale(
+                    requireActivity(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+                displayAlertDialog(if (neverAskAgain) Cause.NEVER_ASK else Cause.PERMISSION)
             }
-
     }
 
     private val getLocationResultListener = object : GetLocationResultListener {
         override fun onGetLocationSucceed(location: Location) {
-            initWeatherFragments(location)
+            attachWeatherFragments(location)
         }
 
         override fun onGetLocationFailed() {
-            displayError(Cause.LOCATION)
+            displayAlertDialog(Cause.LOCATION)
         }
     }
 
@@ -79,6 +79,14 @@ class MainFragment : Fragment() {
             viewPager = it.viewPager
             tabLayout = it.tabLayout
         }
+
+        tabLayoutMediator = TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = when (position) {
+                0 -> "Now"
+                else -> "Forecast"
+            }
+        }
+
         return binding.root
     }
 
@@ -86,10 +94,16 @@ class MainFragment : Fragment() {
         activity?.let {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(it)
         }
-        if (isLocationPermissionGranted()) {
-            getCurrentLocation(getLocationResultListener)
-        } else {
-            locationPermissionRequest.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (!tabLayoutMediator.isAttached) {
+            if (isLocationPermissionGranted()) {
+                getCurrentLocation(getLocationResultListener)
+            } else {
+                locationPermissionRequest.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+            }
         }
     }
 
@@ -99,9 +113,7 @@ class MainFragment : Fragment() {
             if (isLocationEnabled()) {
                 fusedLocationClient.lastLocation.addOnSuccessListener { location ->
                     if (location == null) {
-                        val locationRequest = LocationRequest.create().apply {
-                            priority = Priority.PRIORITY_HIGH_ACCURACY
-                        }
+                        val locationRequest = LocationRequest.create()
                         val callback = object : LocationCallback() {
                             override fun onLocationResult(result: LocationResult) {
                                 listener.onGetLocationSucceed(result.locations.last())
@@ -118,34 +130,37 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun initWeatherFragments(location: Location) {
+    private fun attachWeatherFragments(location: Location) {
         viewPager.adapter = Adapter(this, location)
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = when (position) {
-                0 -> "Now"
-                else -> "Forecast"
-            }
-        }.attach()
+        tabLayoutMediator.attach()
     }
 
-    private fun displayError(cause: Cause) {
-        binding.apply {
-            when (cause) {
-                Cause.PERMISSION -> {
-                    errorLabel.text = "Please provide location access"
-                    retryButton.setOnClickListener {
-                        locationPermissionRequest.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+    private fun displayAlertDialog(cause: Cause) {
+        val alertDialog: AlertDialog? = activity?.let {
+            val builder = AlertDialog.Builder(it).apply {
+                when (cause) {
+                    Cause.PERMISSION -> {
+                        setMessage("Please provide location access")
+                        setPositiveButton("Ok") { _, _ ->
+                            locationPermissionRequest.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
+                        }
                     }
-                }
-                Cause.LOCATION -> {
-                    errorLabel.text = "Please turn on location service"
-                    retryButton.setOnClickListener {
-                        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                        startActivity(intent)
+                    Cause.LOCATION -> {
+                        setMessage("Please turn on location service")
+                        setPositiveButton("Ok") { _, _ ->
+                            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                            startActivity(intent)
+                        }
+                    }
+                    Cause.NEVER_ASK -> {
+                        setMessage("Sorry, this app requires location permission. Please grant access in settings")
+                        setPositiveButton("Ok") {_, _ ->}
                     }
                 }
             }
+            builder.create()
         }
+        alertDialog?.show()
     }
 
     private fun isLocationPermissionGranted() =
@@ -158,6 +173,11 @@ class MainFragment : Fragment() {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
             LocationManager.NETWORK_PROVIDER
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     inner class Adapter(fragment: Fragment, private val location: Location) : FragmentStateAdapter(fragment) {
