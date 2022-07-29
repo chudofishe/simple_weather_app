@@ -2,13 +2,14 @@ package com.chudofishe.weatherapp.domain.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import java.time.LocalDate
 
 
 @Parcelize
 data class ForecastDetails (
     val sunrise: String,
     val sunset: String,
-    val dateEpoch: Int,
+    val date: LocalDate,
     val avgHumidity: Double,
     val avgTemp: Double,
     val icon: String,

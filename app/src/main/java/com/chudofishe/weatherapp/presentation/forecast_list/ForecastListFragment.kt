@@ -13,6 +13,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.chudofishe.weatherapp.common.Constants
 import com.chudofishe.weatherapp.common.Result
 import com.chudofishe.weatherapp.databinding.FragmentForecastListBinding
 import com.chudofishe.weatherapp.domain.model.Forecast
@@ -58,6 +59,13 @@ class ForecastListFragment : Fragment() {
                     }
                 }
             }
+        }
+
+        arguments?.let {
+            viewModel.getCurrentWeather(
+                it.getDouble(Constants.KEY_LATITUDE),
+                it.getDouble(Constants.KEY_LONGITUDE)
+            )
         }
     }
 

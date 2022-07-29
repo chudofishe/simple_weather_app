@@ -61,7 +61,7 @@
         android:id="@+id/other_values"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="64dp"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline4">
@@ -71,36 +71,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="22sp"
             android:gravity="center"
-            android:text="uv" />
+            android:text="uv"
+            android:textSize="22sp" />
 
         <TextView
             android:id="@+id/windKph"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="22sp"
             android:gravity="center"
-            android:text="windKph" />
+            android:text="@string/wind_kph"
+            android:textSize="22sp"
+            tools:text="36 kp/h" />
 
         <TextView
             android:id="@+id/humidity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="22sp"
             android:gravity="center"
-            android:text="humidity" />
+            android:textSize="22sp"
+            tools:text="36 %" />
 
         <TextView
             android:id="@+id/cloud"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="22sp"
             android:gravity="center"
-            android:text="cloud" />
+            android:text="cloud"
+            android:textSize="22sp" />
     </LinearLayout>
 
     <LinearLayout

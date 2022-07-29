@@ -27,9 +27,8 @@ class ForecastDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val forecast = navArgs.forecastDetails
-        val dateEpoch = LocalDate.ofEpochDay(forecast.dateEpoch.toLong())
         binding.apply {
-            date.text = getString(R.string.month_date, dateEpoch.month.toString(), dateEpoch.dayOfMonth)
+            date.text = getString(R.string.month_date, forecast.date.month.toString(), forecast.date.dayOfMonth)
             temp.text = getString(R.string.temperature, forecast.avgTemp.toInt())
             conditionText.text = forecast.text
             uv.text = forecast.uv.toString()

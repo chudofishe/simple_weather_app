@@ -14,7 +14,15 @@ class GetCurrentWeatherUseCase @Inject constructor(
     private val weatherRepository: WeatherRepository
 ) {
 
-    operator fun invoke(location: String = "Podgorica"): Flow<Result<CurrentWeather>> = flow {
+    operator fun invoke(city: String = "Podgorica"): Flow<Result<CurrentWeather>> {
+        return makeRequest(city)
+    }
+
+    operator fun invoke(latitude: Double, longitude: Double): Flow<Result<CurrentWeather>>  {
+        return makeRequest("${latitude.toFloat()},${longitude.toFloat()}")
+    }
+
+    private fun makeRequest(location: String): Flow<Result<CurrentWeather>> = flow {
         try {
             emit(Result.Loading())
             val currentWeather = weatherRepository.getCurrentWeather(location).toCurrentWeather()

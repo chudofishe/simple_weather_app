@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.Glide
 import com.chudofishe.weatherapp.R
+import com.chudofishe.weatherapp.common.Constants
 import com.chudofishe.weatherapp.common.Result
 import com.chudofishe.weatherapp.databinding.FragmentCurrentWeatherBinding
 import com.chudofishe.weatherapp.domain.model.CurrentWeather
@@ -51,13 +52,19 @@ class CurrentWeatherFragment : Fragment() {
                             binding.progressBar.visibility = View.GONE
                         }
                         else -> {
-                            //show error message
                             binding.progressBar.visibility = View.GONE
                             showErrorMessage(result.message ?: "Unknown error occurred")
                         }
                     }
                 }
             }
+        }
+
+        arguments?.let {
+            viewModel.getCurrentWeather(
+                it.getDouble(Constants.KEY_LATITUDE),
+                it.getDouble(Constants.KEY_LONGITUDE)
+            )
         }
     }
 
@@ -72,7 +79,7 @@ class CurrentWeatherFragment : Fragment() {
             conditionText.text = cw.conditionText
             feelsLike.text = getString(R.string.feels_like, cw.feelsLike.toInt())
             uv.text = cw.uv.toString()
-            windKph.text = cw.windKph.toString()
+            windKph.text = getString(R.string.wind_kph, cw.windKph.toInt())
             humidity.text = cw.humidity.toString()
             cloud.text = cw.cloud.toString()
             activity?.let { Glide.with(it).load(cw.conditionIcon).into(icon) }

@@ -6,8 +6,10 @@ import com.chudofishe.weatherapp.domain.model.Forecast
 import com.chudofishe.weatherapp.domain.model.ForecastDetails
 import com.chudofishe.weatherapp.domain.model.HourForecast
 import com.google.gson.annotations.SerializedName
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 data class ForecastdayDto(
     val astro: AstroDto,
@@ -20,8 +22,9 @@ data class ForecastdayDto(
 
 fun ForecastdayDto.toForecast(): Forecast {
     val iconUrl = Util.getIconUrl(day.condition.icon)
+    val date = LocalDate.parse(this.date, DateTimeFormatter.ofPattern("yyyy-MM-dd"))
     return Forecast(
-        dateEpoch = dateEpoch,
+        date = date,
         avgHumidity = day.avghumidity,
         avgTemp = day.avgtempC,
         icon = iconUrl,
@@ -29,7 +32,7 @@ fun ForecastdayDto.toForecast(): Forecast {
         details = ForecastDetails(
             sunrise = astro.sunrise,
             sunset = astro.sunset,
-            dateEpoch = dateEpoch,
+            date = date,
             avgHumidity = day.avghumidity,
             avgTemp = day.avgtempC,
             icon = iconUrl,

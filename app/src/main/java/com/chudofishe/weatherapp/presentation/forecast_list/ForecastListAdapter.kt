@@ -30,7 +30,7 @@ class ForecastListAdapter(private val values: List<Forecast>,
 
         fun bind(item: Forecast) {
             binding.apply {
-                weekDay.text = LocalDate.ofEpochDay(item.dateEpoch.toLong()).dayOfWeek.toString()
+                weekDay.text = item.date.dayOfWeek.toString()
                 tempAndCondition.text = itemView.resources.getString(R.string.temp_and_condition, item.avgTemp.toInt(), item.text)
                 Glide.with(itemView).load(item.icon).into(conditionIcon)
             }

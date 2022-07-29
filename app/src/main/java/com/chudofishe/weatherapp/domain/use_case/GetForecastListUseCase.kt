@@ -13,8 +13,15 @@ import javax.inject.Inject
 class GetForecastListUseCase @Inject constructor(
     private val weatherRepository: WeatherRepository
 ) {
+    operator fun invoke(city: String = "Podgorica"): Flow<Result<List<Forecast>>> {
+        return makeRequest(city)
+    }
 
-    operator fun invoke(location: String = "Podgorica"): Flow<Result<List<Forecast>>> = flow {
+    operator fun invoke(latitude: Double, longitude: Double): Flow<Result<List<Forecast>>>  {
+        return makeRequest("${latitude.toFloat()},${longitude.toFloat()}")
+    }
+
+    private fun makeRequest(location: String): Flow<Result<List<Forecast>>> = flow {
         try {
             emit(Result.Loading())
             val forecastList = weatherRepository.getForecastList(location).map { it.toForecast() }

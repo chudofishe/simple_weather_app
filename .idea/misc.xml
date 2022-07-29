@@ -3,6 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_baseline_cloud_24.xml" value="0.164" />
+        <entry key="app/src/main/res/drawable/ic_baseline_umbrella_24.xml" value="0.236" />
+        <entry key="app/src/main/res/drawable/ic_baseline_wb_sunny_24.xml" value="0.236" />
+        <entry key="app/src/main/res/drawable/ic_baseline_wind_power_24.xml" value="0.236" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.2259963768115942" />
         <entry key="app/src/main/res/layout/forecast_item.xml" value="0.45" />
         <entry key="app/src/main/res/layout/fragment_current_weather.xml" value="0.375" />
