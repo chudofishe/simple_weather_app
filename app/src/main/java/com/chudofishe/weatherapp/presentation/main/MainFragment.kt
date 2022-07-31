@@ -25,7 +25,6 @@ import com.chudofishe.weatherapp.common.Constants.KEY_LONGITUDE
 import com.chudofishe.weatherapp.databinding.FragmentMainBinding
 import com.chudofishe.weatherapp.presentation.current_weather.CurrentWeatherFragment
 import com.chudofishe.weatherapp.presentation.forecast_list.ForecastListFragment
-import com.chudofishe.weatherapp.presentation.util.GetLocationResultListener
 import com.google.android.gms.location.*
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator

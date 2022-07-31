@@ -1,4 +1,4 @@
-package com.chudofishe.weatherapp.presentation.util
+package com.chudofishe.weatherapp.presentation.main
 
 import android.location.Location
 

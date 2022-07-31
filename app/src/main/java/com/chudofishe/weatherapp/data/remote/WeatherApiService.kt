@@ -9,6 +9,6 @@ interface WeatherApiService {
     suspend fun getCurrentWeatherByLocation(
         @Query("key") apiKey: String,
         @Query("q") location: String,
-        @Query("days") days: Int = 7
+        @Query("days") days: Int = 3
     ): WeatherObjectDto
 }

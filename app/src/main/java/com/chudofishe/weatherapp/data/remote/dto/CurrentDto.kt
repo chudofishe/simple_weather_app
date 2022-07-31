@@ -23,17 +23,3 @@ data class CurrentDto(
     @SerializedName("wind_kph")
     val windKph: Double
 )
-
-fun CurrentDto.toCurrentWeather(): CurrentWeather {
-    val iconUrl = Util.getIconUrl(condition.icon)
-    return CurrentWeather(
-        cloud = cloud,
-        conditionIcon = iconUrl,
-        conditionText = condition.text,
-        feelsLike = feelslikeC,
-        humidity = humidity,
-        temp = tempC.toInt(),
-        uv = uv,
-        windKph = windKph
-    )
-}

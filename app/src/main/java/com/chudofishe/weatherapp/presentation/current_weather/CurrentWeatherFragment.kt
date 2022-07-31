@@ -75,6 +75,7 @@ class CurrentWeatherFragment : Fragment() {
 
     private fun assignData(cw: CurrentWeather) {
         binding.apply {
+            location.text = getString(R.string.location, cw.city, cw.country)
             temp.text = getString(R.string.temperature, cw.temp)
             conditionText.text = cw.conditionText
             feelsLike.text = getString(R.string.feels_like, cw.feelsLike.toInt())

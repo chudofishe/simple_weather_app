@@ -1,9 +1,8 @@
 package com.chudofishe.weatherapp.domain.model
 
-import com.chudofishe.weatherapp.data.remote.dto.ConditionDto
-import com.google.gson.annotations.SerializedName
-
 data class CurrentWeather (
+    val city: String,
+    val country: String,
     val cloud: Int,
     val conditionIcon: String,
     val conditionText: String,

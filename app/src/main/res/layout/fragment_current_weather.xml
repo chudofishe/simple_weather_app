@@ -7,6 +7,17 @@
     android:orientation="vertical"
     tools:context=".presentation.current_weather.CurrentWeatherFragment">
 
+    <TextView
+        android:id="@+id/location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/location"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Podgorica, Montenegro"/>
 
     <ImageView
         android:id="@+id/icon"
@@ -148,7 +159,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="36dp" />
+        app:layout_constraintGuide_begin="93dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
@@ -162,7 +173,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:constraint_referenced_ids="icon, temp, conditionText, feelsLike, other_values, other_values_icons"
+        app:constraint_referenced_ids="icon, temp, conditionText, feelsLike, other_values, other_values_icons, location"
         tools:visibility="visible" />
 
     <ProgressBar
@@ -182,6 +193,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="210dp" />
+        app:layout_constraintGuide_begin="263dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
